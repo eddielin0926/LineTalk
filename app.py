@@ -280,6 +280,27 @@ parser = WebhookParser(channel_secret)
 def home():
     return render_template("index.html")
 
+@app.route('/README.md')
+def return_files_tut():
+	try:
+		return send_file('README.md', attachment_filename='README.md')
+	except Exception as e:
+		return str(e)
+
+@app.route('/img/<path:req_path>')
+def dir_listing(req_path):
+    BASE_DIR = 'img'
+
+    # Joining the base and the requested path
+    abs_path = os.path.join(BASE_DIR, req_path)
+    
+    # Return 404 if path doesn't exist
+    if not os.path.exists(abs_path):
+        return abort(404)
+
+    # Check if path is a file and serve
+    if os.path.isfile(abs_path):
+        return send_file(abs_path)
 
 @app.route("/callback", methods=["POST"])
 def callback():

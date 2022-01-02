@@ -74,7 +74,7 @@ ngrok http 8000
 
 - Update webhook url
 Concate the url generate by Ngrok  with /webhook (/callback) and put it to line bot channel
-![](https://i.imgur.com/YHJlLFH.png)
+![](img/sFBIW3V.png)
 
 ## Run Locally
 
@@ -90,7 +90,7 @@ $ conda activate toc
 
 ## Finite State Machine
 
-![fsm](./fsm.png)
+![fsm](img/fsm.png)
 
 ## Deploy
 
