@@ -215,7 +215,8 @@ class System():
             send_text_message(user.line_id, "配對成功!\n開始與對方聊天吧~\n輸入 @bot 呼叫選單")
             send_text_message(
                 user.line_id, f"對方資訊\n暱稱: {'(未設定)' if not paired_user.nickname else paired_user.nickname}\n性別: {'(未設定)' if not paired_user.gender else paired_user.gender}\n年齡: {'(未設定)' if not paired_user.age else paired_user.age}")
-            send_text_message(paired_user.line_id, "配對成功!\n開始與對方聊天吧~\n輸入 @bot 呼叫選單")
+            send_text_message(paired_user.line_id,
+                              "配對成功!\n開始與對方聊天吧~\n輸入 @bot 呼叫選單")
             send_text_message(
                 paired_user.line_id, f"對方資訊\n暱稱: {'(未設定)' if not user.nickname else user.nickname}\n性別: {'(未設定)' if not user.gender else user.gender}\n年齡: {'(未設定)' if not user.age else user.age}")
             user.paired_user = paired_user
@@ -241,19 +242,20 @@ class System():
         paired_user = user.paired_user
         if not paired_user.RPS:
             return
-        if (user.RPS == '剪刀✌' and paired_user.RPS == '布🖐') or (user.RPS  == '石頭👊' and paired_user.RPS == '剪刀✌') or (user.RPS  == '布🖐' and paired_user.RPS == '石頭👊'):
+        if (user.RPS == '剪刀✌' and paired_user.RPS == '布🖐') or (user.RPS == '石頭👊' and paired_user.RPS == '剪刀✌') or (user.RPS == '布🖐' and paired_user.RPS == '石頭👊'):
             send_text_message(user.line_id, f"對方出了{paired_user.RPS}，你贏了!")
             send_text_message(paired_user.line_id, f"對方出了{user.RPS}，你輸了!")
-        elif (user.RPS == '剪刀✌' and paired_user.RPS == '剪刀✌') or (user.RPS  == '石頭👊' and paired_user.RPS == '石頭👊') or (user.RPS  == '布🖐' and paired_user.RPS == '布🖐'):
+        elif (user.RPS == '剪刀✌' and paired_user.RPS == '剪刀✌') or (user.RPS == '石頭👊' and paired_user.RPS == '石頭👊') or (user.RPS == '布🖐' and paired_user.RPS == '布🖐'):
             send_text_message(user.line_id, f"對方出了{paired_user.RPS}，平手!")
             send_text_message(paired_user.line_id, f"對方出了{user.RPS}，平手!")
-        elif (user.RPS == '剪刀✌' and paired_user.RPS == '石頭👊') or (user.RPS  == '石頭👊' and paired_user.RPS == '布🖐') or (user.RPS  == '布🖐' and paired_user.RPS == '剪刀✌'):
+        elif (user.RPS == '剪刀✌' and paired_user.RPS == '石頭👊') or (user.RPS == '石頭👊' and paired_user.RPS == '布🖐') or (user.RPS == '布🖐' and paired_user.RPS == '剪刀✌'):
             send_text_message(user.line_id, f"對方出了{paired_user.RPS}，你輸了!")
             send_text_message(paired_user.line_id, f"對方出了{user.RPS}，你贏了!")
         user.RPS = None
         paired_user.RPS = None
         user.finish_RPS()
         paired_user.finish_RPS()
+
 
 system = System()
 
@@ -342,7 +344,7 @@ def webhook_handler():
 
 @app.route("/show-fsm", methods=["GET"])
 def show_fsm():
-    if system.users:
+    if not os.path.isfile("fsm.png") and system.users:
         system.users[0].machine.get_graph().draw(
             "fsm.png", prog="dot", format="png")
     return send_file("fsm.png", mimetype="image/png")

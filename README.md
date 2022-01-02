@@ -1,159 +1,153 @@
-# TOC Project 2020
+# LineTalk -  TOC Project 2020
 
-[![Maintainability](https://api.codeclimate.com/v1/badges/dc7fa47fcd809b99d087/maintainability)](https://codeclimate.com/github/NCKU-CCS/TOC-Project-2020/maintainability)
+> A Line bot based on a finite state machine for TOC Project 2020  
+> Github repository: https://github.com/Eddielin0926/FSM-Line-Bot
 
-[![Known Vulnerabilities](https://snyk.io/test/github/NCKU-CCS/TOC-Project-2020/badge.svg)](https://snyk.io/test/github/NCKU-CCS/TOC-Project-2020)
+## Usage
 
+- Enter `@bot` for calling the menu  
+![](img/LINE_capture_662805276.093995.jpg)
 
-Template Code for TOC Project 2020
+- Select `設定個人資訊` to set your personal profile
+![](img/LINE_capture_662816468.812115.jpg)
 
-A Line bot based on a finite state machine
+- Select `配對設定` to set your personal preference
+![](img/LINE_capture_662816782.892315.jpg)
 
-More details in the [Slides](https://hackmd.io/@TTW/ToC-2019-Project#) and [FAQ](https://hackmd.io/s/B1Xw7E8kN)
+- Select `開始配對` to start talking to others
+![](img/LINE_capture_662816980.780412.jpg)
+
+- While chatting, enter `@bot` to call the menu
+![](img/LINE_capture_662817077.741216.jpg)
+
+- Select `我要猜拳🖐` to start a rock paper scissors
+![](img/LINE_capture_662817108.751113.jpg)
+
+- Select `幫我想話題💬` to list some random topic
+![](img/LINE_capture_662817207.810885.jpg)
+
+- Select `我要離開🏃` to leave the chat
+![](img/LINE_capture_662817224.871893.jpg)
 
 ## Setup
 
 ### Prerequisite
-* Python 3.6
-* Pipenv
-* Facebook Page and App
-* HTTPS Server
+
+* Conda (Anaconda/Miniconda)
 
 #### Install Dependency
+
+- Create Conda environment
 ```sh
-pip3 install pipenv
-
-pipenv --three
-
-pipenv install
-
-pipenv shell
+$ conda create --name toc python=3.6
+$ conda activate toc
 ```
 
-* pygraphviz (For visualizing Finite State Machine)
-    * [Setup pygraphviz on Ubuntu](http://www.jianshu.com/p/a3da7ecc5303)
-	* [Note: macOS Install error](https://github.com/pygraphviz/pygraphviz/issues/100)
+- Install pygraphviz
+```sh
+(toc) $ conda install -c conda-forge pygraphviz
+```
 
+- Install other dependencies
+```sh
+(toc) pip install python-dotenv pygraphviz transitions line-bot-sdk flask colorama
+```
 
 #### Secret Data
-You should generate a `.env` file to set Environment Variables refer to our `.env.sample`.
-`LINE_CHANNEL_SECRET` and `LINE_CHANNEL_ACCESS_TOKEN` **MUST** be set to proper values.
-Otherwise, you might not be able to run your code.
 
-#### Run Locally
-You can either setup https server or using `ngrok` as a proxy.
-
-#### a. Ngrok installation
-* [ macOS, Windows, Linux](https://ngrok.com/download)
-
-or you can use Homebrew (MAC)
-```sh
-brew cask install ngrok
+- Creat `.env` file and fill in your channel info
+```dotenv
+LINE_CHANNEL_SECRET=<your_line_channel_secret>
+LINE_CHANNEL_ACCESS_TOKEN=<your_line_channel_access_token>
+PORT=8000
 ```
 
-**`ngrok` would be used in the following instruction**
+#### Ngrok
+
+- Download [Ngrok](https://ngrok.com/download) and execute
 
 ```sh
 ngrok http 8000
 ```
 
-After that, `ngrok` would generate a https URL.
+#### Line Webhook
 
-#### Run the sever
+- Update webhook url
+Concate the url generate by Ngrok  with /webhook (/callback) and put it to line bot channel
+![](https://i.imgur.com/YHJlLFH.png)
 
+## Run Locally
+
+- Start Conda environment
 ```sh
-python3 app.py
+$ conda activate toc
 ```
 
-#### b. Servo
-
-Or You can use [servo](http://serveo.net/) to expose local servers to the internet.
-
+- Execute program
+```sh
+(toc) $ python app.py
+```
 
 ## Finite State Machine
-![fsm](./img/show-fsm.png)
 
-## Usage
-The initial state is set to `user`.
-
-Every time `user` state is triggered to `advance` to another state, it will `go_back` to `user` state after the bot replies corresponding message.
-
-* user
-	* Input: "go to state1"
-		* Reply: "I'm entering state1"
-
-	* Input: "go to state2"
-		* Reply: "I'm entering state2"
+![fsm](./fsm.png)
 
 ## Deploy
-Setting to deploy webhooks on Heroku.
 
-### Heroku CLI installation
+Deploy the Line-bot server on Heroku.
+
+### Heroku
 
 * [macOS, Windows](https://devcenter.heroku.com/articles/heroku-cli)
 
-or you can use Homebrew (MAC)
-```sh
-brew tap heroku/brew && brew install heroku
-```
-
-or you can use Snap (Ubuntu 16+)
-```sh
-sudo snap install --classic heroku
-```
-
 ### Connect to Heroku
 
-1. Register Heroku: https://signup.heroku.com
+- Register Heroku: https://signup.heroku.com  
 
-2. Create Heroku project from website
+- Create Heroku project from website  
 
-3. CLI Login
+- CLI Login  
+```sh
+$ heroku login
+```
 
-	`heroku login`
 
-### Upload project to Heroku
+### Setup Environment on Heroku
 
-1. Add local project to Heroku project
+- Setup environment variables  
+```sh
+heroku config:set LINE_CHANNEL_SECRET=<your_line_channel_secret>
+heroku config:set LINE_CHANNEL_ACCESS_TOKEN=<your_line_channel_access_token>
+```
 
-	heroku git:remote -a {HEROKU_APP_NAME}
+- Fix `pygraphviz` intall error  
+```
+heroku buildpacks:set heroku/python
+heroku buildpacks:add --index 1 heroku-community/apt
+```
 
-2. Upload project
+###### reference: https://hackmd.io/@ccw/B1Xw7E8kN?type=view#Q2-如何在-Heroku-使用-pygraphviz
+### Connect Github Repository to Heroku
 
-	```
-	git add .
-	git commit -m "Add code"
-	git push -f heroku master
-	```
+- Connect to your Github repository  
+![](img/xO951w2.png)
 
-3. Set Environment - Line Messaging API Secret Keys
+- If you have pushed to Github, you can use manual deploy  
+![](img/sFBIW3V.png)
 
-	```
-	heroku config:set LINE_CHANNEL_SECRET=your_line_channel_secret
-	heroku config:set LINE_CHANNEL_ACCESS_TOKEN=your_line_channel_access_token
-	```
+- You can also use automatic deploy. Once you push your repository, Heroku will start deploy.  
+![](img/ygTfffh.png)
 
-4. Your Project is now running on Heroku!
+### Complete
 
-	url: `{HEROKU_APP_NAME}.herokuapp.com/callback`
-
-	debug command: `heroku logs --tail --app {HEROKU_APP_NAME}`
-
-5. If fail with `pygraphviz` install errors
-
-	run commands below can solve the problems
-	```
-	heroku buildpacks:set heroku/python
-	heroku buildpacks:add --index 1 heroku-community/apt
-	```
-
-	refference: https://hackmd.io/@ccw/B1Xw7E8kN?type=view#Q2-如何在-Heroku-使用-pygraphviz
+- url: `{HEROKU_APP_NAME}.herokuapp.com/callback`  
+- logs: `heroku logs --tail --app {HEROKU_APP_NAME}`
 
 ## Reference
-[Pipenv](https://medium.com/@chihsuan/pipenv-更簡單-更快速的-python-套件管理工具-135a47e504f4) ❤️ [@chihsuan](https://github.com/chihsuan)
 
-[TOC-Project-2019](https://github.com/winonecheng/TOC-Project-2019) ❤️ [@winonecheng](https://github.com/winonecheng)
-
-Flask Architecture ❤️ [@Sirius207](https://github.com/Sirius207)
-
-[Line line-bot-sdk-python](https://github.com/line/line-bot-sdk-python/tree/master/examples/flask-echo)
+- [TOC-Project-2020](https://github.com/NCKU-CCS/TOC-Project-2020)
+- [Pipenv](https://medium.com/@chihsuan/pipenv-更簡單-更快速的-python-套件管理工具-135a47e504f4) ❤️ [@chihsuan](https://github.com/chihsuan)
+- [TOC-Project-2019](https://github.com/winonecheng/TOC-Project-2019) ❤️ [@winonecheng](https://github.com/winonecheng)
+- Flask Architecture ❤️ [@Sirius207](https://github.com/Sirius207)
+- [Line line-bot-sdk-python](https://github.com/line/line-bot-sdk-python/tree/master/examples/flask-echo)
+- More details in the [Slides](https://hackmd.io/@TTW/ToC-2019-Project#) and [FAQ](https://hackmd.io/s/B1Xw7E8kN)

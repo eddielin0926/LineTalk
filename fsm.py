@@ -122,7 +122,7 @@ class TocMachine(GraphMachine):
 
     def on_enter_preference(self, event):
         id = event.source.user_id
-        send_button_message(id, "設定配對", "選擇希望配對對象", [
+        send_button_message(id, "設定配對", "選擇希望配對的對象", [
                             ("性別", "我要設定性別"), ("年齡", "我要設定年齡"), ("完成", "完成設定")])
 
     def set_preference(self, event):
@@ -162,7 +162,7 @@ class TocMachine(GraphMachine):
 
     def on_enter_prefered_gender(self, event):
         id = event.source.user_id
-        send_button_message(id, "請選擇性別", "從下列選項選擇你的性別", [
+        send_button_message(id, "請選擇性別", "從下列選項選擇你希望配對到的性別", [
                             ("男生", "男生"), ("女生", "女生"), ("其他", "其他")])
 
     def set_prefered_gender(self, event):
