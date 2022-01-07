@@ -1,6 +1,6 @@
-# LineTalk -  TOC Project 2020
+# LineTalk -  TOC Project 2021
 
-> A Line bot based on a finite state machine for TOC Project 2020  
+> A Line bot based on a finite state machine for TOC Project 2021  
 > Github repository: https://github.com/Eddielin0926/FSM-Line-Bot
 
 ## Usage

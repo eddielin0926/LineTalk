@@ -22,6 +22,16 @@ class TocMachine(GraphMachine):
         self.paired_user=None
         self.RPS=None
 
+    def is_going_to_new_state(self, event):
+        return event.message.text == "new_state"
+
+    def on_enter_new_state(self, event):
+        id = event.source.user_id
+        send_text_message(id, "enter new state")
+    
+    def is_going_to_user(self, event):
+        return event.message.text == "user"
+
     # User State #####################
     def show_menu(self, event):
         if event.type == "follow":

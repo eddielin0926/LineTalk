@@ -28,10 +28,22 @@ class System():
             system=self,
             id=self._id,
             line_id=line_id,
-            states=["user", "intro", "intro_nickname",
+            states=["user", "new_state", "intro", "intro_nickname",
                     "intro_gender", "intro_age", "preference", "prefered_gender", "prefered_age",
                     "pairing", "chating", "RPS", "waiting_RPS"],
             transitions=[
+                {
+                    "trigger": "advance",
+                    "source": "user",
+                    "dest": "new_state",
+                    "conditions": "is_going_to_new_state",
+                },
+                {
+                    "trigger": "advance",
+                    "source": "new_state",
+                    "dest": "user",
+                    "conditions": "is_going_to_user",
+                },
                 {
                     "trigger": "advance",
                     "source": "user",
